@@ -70,18 +70,18 @@ def main():
 		nowMin = int(now.strftime("%M")) # Minute of the hour
 		print(f"It is {nowDay}, at {nowHour}:{nowMin}\n")
 
-		if nowDay in earlyDays:
+		if nowDay in earlyDays: # earlyDays are Mon, Tues, Frid
 			print("earlyDays\n")
 			# Will prompt the goodMorning function to go off when between 0612 and 0625
-			timeComp(6,12,25,nowHour,nowMin)
-		elif nowDay in earlierDays:
+			timeComp(6,13,25,nowHour,nowMin)
+		elif nowDay in earlierDays: # earlierDays is Wed
 			print("earlierDays\n")
 			# Prompts goodMorning() to go off between 0600 and 0615
 			timeComp(6,0,15,nowHour,nowMin)
 		elif nowDay in weekend:
 			# Prompts goodMorning() to go off between 0900 and 0930
 			timeComp(9,30,45,nowHour,nowMin)
-		else:
+		else: # Thursday is an off day
 			print("Today is Thursday")
 			# Prompts goodMorning() to go off between 1030 and 1045
 			timeComp(10,30,45,nowHour,nowMin)
