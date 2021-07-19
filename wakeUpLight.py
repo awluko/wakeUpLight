@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 # Sets the pixels variable to the D18 pin on the board and establishes that there are 12 LEDs. These values may need to change
 pixels = neopixel.NeoPixel(board.D18,12)
 # Lists for day of the week, ideally this will become more dynamic in the future, Thursday isn't on the list because it is not a work day currently
-earlyDays = ["Mon","Tue","Fri"]
-earlierDays = ["Wed"]
+#earlyDays = ["Mon","Tue","Fri"]
+#earlierDays = ["Wed"]
 weekend = ["Sun", "Sat"]
 
 
@@ -70,20 +70,25 @@ def main():
 		nowMin = int(now.strftime("%M")) # Minute of the hour
 		print(f"It is {nowDay}, at {nowHour}:{nowMin}\n")
 
-		if nowDay in earlyDays:
-			print("earlyDays\n")
-			# Will prompt the goodMorning function to go off when between 0612 and 0625
-			timeComp(6,12,25,nowHour,nowMin)
-		elif nowDay in earlierDays:
-			print("earlierDays\n")
-			# Prompts goodMorning() to go off between 0600 and 0615
-			timeComp(6,0,15,nowHour,nowMin)
+		if nowDay == 'Mon':
+			# Will prompt the goodMorning function to go off when between 0600 and 0610
+			timeComp(6,0,10,nowHour,nowMin)
+		elif nowDay == 'Tue':
+			# Will prompt the goodMorning function to go off when between 0628 and 0635
+			timeComp(6,28,35,nowHour,nowMin)
+		elif nowDay == 'Wed':
+			# Will prompt the goodMorning function to go off when between 0628 and 0635
+			timeComp(6,28,35,nowHour,nowMin)
+		elif nowDay == 'Thu':
+			print("Today is Thursday.")
+			#timeComp(6,28,35,nowHour,nowMin)
+		elif nowDay == 'Fri':
+			# Will prompt the goodMorning function to go off when between 0600 and 0610
+			timeComp(6,0,10,nowHour,nowMin)
 		elif nowDay in weekend:
 			# Prompts goodMorning() to go off between 0900 and 0930
 			timeComp(9,30,45,nowHour,nowMin)
 		else:
-			print("Today is Thursday")
-			# Prompts goodMorning() to go off between 1030 and 1045
-			timeComp(10,30,45,nowHour,nowMin)
+			print("An invalid entry was made")
 
 main()
