@@ -77,7 +77,7 @@ def main():
 	elif nowHour == 22 and nowMin == 0:
 		# Triggers the goodnight reminder
 		print("Time for bed.")
-		goodnight()
+		goodNight()
 	else:
 		print("Not the right time, waiting 60 seconds.")
 		time.sleep(60)
