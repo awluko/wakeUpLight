@@ -74,7 +74,8 @@ def main():
 	if nowHour == sHour and nowMin == sMin:
 		print("Time matches.")
 		wakeUp(120)
-	elif nowHour == 14 and nowMin == 55:
+	elif nowHour == 22 and nowMin == 0:
+		# Triggers the goodnight reminder
 		print("Time for bed.")
 		goodnight()
 	else:
