@@ -2,41 +2,32 @@
 # wakeUpLight.py is a script that runs on a wake up light using a NeoPixel ring and a Raspberry Pi Zero WH
 ######################################
 
-import board, neopixel, time
-from datetime import datetime, timedelta
+import board, neopixel # Specific to the Raspberry Pi, comment out for testing
+import time, json
+from datetime import datetime
 
 # Sets the pixels variable to the D18 pin on the board and establishes that there are 12 LEDs. These values may need to change
 pixels = neopixel.NeoPixel(board.D18,12)
-# Lists for day of the week, ideally this will become more dynamic in the future, Thursday isn't on the list because it is not a work day currently
-#earlyDays = ["Mon","Tue","Fri"]
-#earlierDays = ["Wed"]
-weekend = ["Sun", "Sat"]
 
-
+def settings_load():
+	# Loads the settings.json file to pull the current alarm settings
+	print("Pulling settings")
+	with open("settings.json", "r", encoding="utf-8") as f:
+		settings = json.load(f)
+	return settings
 
 # Compares the times set based on the day versus the current time. 
-def timeComp(h, m, mMax, nowHour, nowMin):
-	print("timeComp has been called")
-	# Displays current settings passed to the function
-	print(f"\nSettings are:\nh: {h}\nm: {m}\nmMax: {mMax}\nnowHour: {nowHour}\nnowMin: {nowMin}\n")
+def wakeUp(t = 900):
+	# Executes the wake up protocol from goodMorning, sleeping, and lightsOff
 	try:
-		if nowHour == h:
-			print("The hour is accurate")
-			if nowMin >= m and nowMin <= mMax:
-				print("The minute is accurate, calling goodMorning")
-				goodMorning()
-				print("Sleeping for 15 minutes")
-				time.sleep(900)
-				print("Slept successfully, turning lights off")
-				lightsOff()
-				print("Done\n")
-			else:
-				print("It is too late, waiting to try again")
-				time.sleep(300)
-				print("Done waiting")
-		else:
-			print("The hour is wrong, sleeping for 5 minutes\n")
-			time.sleep(300)
+		print("Calling goodMorning")
+		goodMorning()
+		# Default for t is 900 seconds or 15 minutes
+		print(f"Sleeping for {int(t/60)} minutes")
+		time.sleep(t)
+		print("Slept successfully, turning lights off")
+		lightsOff()
+		print("Done\n")
 	except Exception as e:
 		print(f"There was an error.\nThe error was {e}")
 
@@ -62,51 +53,33 @@ def goodNight():
 			time.sleep(0.5)
 
 def main():
-	while True: # Keeps the loop open		
-		# Pull the current time
-		now = datetime.now()
-		nowDay = str(now.strftime("%a")) # Day of the week, shorthand (e.g. Mon)
-		nowHour = int(now.strftime("%H")) # Hour of the day, 24 hour clock
-		nowMin = int(now.strftime("%M")) # Minute of the hour
-		print(f"It is {nowDay}, at {nowHour}:{nowMin}\n")
 
-<<<<<<< HEAD
-		if nowDay in earlyDays: # earlyDays are Mon, Tues, Frid
-			print("earlyDays\n")
-			# Will prompt the goodMorning function to go off when between 0612 and 0625
-			timeComp(6,13,25,nowHour,nowMin)
-		elif nowDay in earlierDays: # earlierDays is Wed
-			print("earlierDays\n")
-			# Prompts goodMorning() to go off between 0600 and 0615
-			timeComp(6,0,15,nowHour,nowMin)
-		elif nowDay in weekend:
-			# Prompts goodMorning() to go off between 0900 and 0930
-			timeComp(9,30,45,nowHour,nowMin)
-		else: # Thursday is an off day
-			print("Today is Thursday")
-			# Prompts goodMorning() to go off between 1030 and 1045
-			timeComp(10,30,45,nowHour,nowMin)
-=======
-		if nowDay == 'Mon':
-			# Will prompt the goodMorning function to go off when between 0600 and 0610
-			timeComp(6,0,10,nowHour,nowMin)
-		elif nowDay == 'Tue':
-			# Will prompt the goodMorning function to go off when between 0628 and 0635
-			timeComp(6,28,35,nowHour,nowMin)
-		elif nowDay == 'Wed':
-			# Will prompt the goodMorning function to go off when between 0628 and 0635
-			timeComp(6,28,35,nowHour,nowMin)
-		elif nowDay == 'Thu':
-			print("Today is Thursday.")
-			#timeComp(6,28,35,nowHour,nowMin)
-		elif nowDay == 'Fri':
-			# Will prompt the goodMorning function to go off when between 0600 and 0610
-			timeComp(6,0,10,nowHour,nowMin)
-		elif nowDay in weekend:
-			# Prompts goodMorning() to go off between 0900 and 0930
-			timeComp(9,30,45,nowHour,nowMin)
-		else:
-			print("An invalid entry was made")
->>>>>>> fb4cdfe2de03f70f7ef638b5ed0e38ed920d4739
+	# Pull JSON file for settings
+	settings = settings_load()
 
-main()
+	# Pull the current time
+	now = datetime.now()
+	nowDay = str(now.strftime("%a")) # Day of the week, shorthand (e.g. Mon)
+	nowHour = int(now.strftime("%H")) # Hour of the day, 24 hour clock
+	nowMin = int(now.strftime("%M")) # Minute of the hour
+	print(f"It is {nowDay}, at {nowHour}:{nowMin}\n")
+
+	# Establish current settings
+	sHour = settings[nowDay]["h"]
+	sMin = settings[nowDay]["m"]
+	print(f'Current day/time:\nDay: {nowDay}\n'
+		  f'Hour: {nowHour}\nMin: {nowMin}\n\nSettings:\n'
+		  f'Hour: {sHour}\nMin: {sMin}\n')
+
+	if nowHour == sHour and nowMin == sMin:
+		print("Time matches.")
+		wakeUp(120)
+	elif nowHour == 14 and nowMin == 55:
+		print("Time for bed.")
+		goodnight()
+	else:
+		print("Not the right time, waiting 60 seconds.")
+		time.sleep(60)
+
+while True:
+	main()
