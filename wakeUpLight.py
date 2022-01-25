@@ -43,7 +43,6 @@ def goodMorning():
 		for y in range(12):
 			pixels[y] = (x,x,0)
 			time.sleep(0.1)
-	lightsOff()
 
 # Turns the LEDs from a bright blue down until the LEDs are off
 def goodNight():
@@ -52,6 +51,8 @@ def goodNight():
 		for y in range(12):
 			pixels[y]=(0,0,brightness)
 			time.sleep(0.5)
+	time.sleep(300)
+	lightsOff()
 
 def main():
 
