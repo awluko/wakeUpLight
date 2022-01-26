@@ -50,7 +50,7 @@ def goodNight():
 		brightness = 256 - x
 		for y in range(12):
 			pixels[y]=(0,0,brightness)
-			time.sleep(0.5)
+			time.sleep(0.25)
 	time.sleep(300)
 	lightsOff()
 
