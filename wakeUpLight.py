@@ -50,7 +50,7 @@ def goodNight():
 		brightness = 256 - x
 		for y in range(12):
 			pixels[y]=(0,0,brightness)
-			time.sleep(0.25)
+			time.sleep(0.1)
 	time.sleep(300)
 	lightsOff()
 
@@ -75,7 +75,7 @@ def main():
 
 	if nowHour == sHour and nowMin == sMin:
 		print("Time matches.")
-		wakeUp(120)
+		wakeUp(900)
 	elif nowHour == 22 and nowMin == 0:
 		# Triggers the goodnight reminder
 		print("Time for bed.")
